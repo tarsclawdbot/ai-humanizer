@@ -89,9 +89,9 @@ OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightl
 
 # =============================================================================
 # MODEL & PARAMETER CONFIGURATION
-# Using OpenAI GPT-4o with high randomness settings for humanization
+# Using OpenAI GPT-5.2 with low reasoning effort for humanization
 # =============================================================================
-MODEL_NAME = "gpt-4o"  # Latest OpenAI model (gpt-5.2 not yet available)
+MODEL_NAME = "gpt-5.2"  # OpenAI's flagship model with reasoning control
 
 GENERATION_CONFIG = {
     "temperature": 0.95,        # High randomness for unpredictable word choices
@@ -99,6 +99,10 @@ GENERATION_CONFIG = {
     "presence_penalty": 0.4,    # Discourages repeating concepts
     "frequency_penalty": 0.3,   # Reduces repetition of specific words
     "max_tokens": 2048,         # Standard conversational length
+}
+
+REASONING_CONFIG = {
+    "effort": "low"  # Options: "none", "low", "medium", "high", "xhigh"
 }
 
 EXIT_COMMANDS = {"exit", "quit", "bye", "goodbye", "q"}
@@ -115,7 +119,7 @@ This chatbot uses advanced techniques to generate human-like text:
 • AI pattern eradication (bans robotic phrases)
 • Human voice injection (opinions, fragments, colloquialisms)
 
-Model: {MODEL_NAME}
+Model: {MODEL_NAME} (reasoning: {REASONING_CONFIG['effort']})
 Parameters: temperature={GENERATION_CONFIG['temperature']}, top_p={GENERATION_CONFIG['top_p']}
             presence_penalty={GENERATION_CONFIG['presence_penalty']}, frequency_penalty={GENERATION_CONFIG['frequency_penalty']}
 
@@ -169,7 +173,7 @@ def initialize_client(api_key: str):
 
 
 def generate_response(client: OpenAI, messages: list) -> str:
-    """Generate a humanized response using OpenAI API."""
+    """Generate a humanized response using OpenAI API with GPT-5.2 reasoning control."""
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages=messages,
@@ -178,6 +182,7 @@ def generate_response(client: OpenAI, messages: list) -> str:
         presence_penalty=GENERATION_CONFIG["presence_penalty"],
         frequency_penalty=GENERATION_CONFIG["frequency_penalty"],
         max_tokens=GENERATION_CONFIG["max_tokens"],
+        reasoning=REASONING_CONFIG,  # GPT-5.2 reasoning effort control
     )
     return response.choices[0].message.content
 
@@ -201,9 +206,9 @@ def main():
     ]
     
     if RICH_AVAILABLE:
-        console.print(f"[dim]Connected to OpenAI API ({MODEL_NAME}). Ready to chat![/dim]\n")
+        console.print(f"[dim]Connected to OpenAI API ({MODEL_NAME}, reasoning={REASONING_CONFIG['effort']}). Ready to chat![/dim]\n")
     else:
-        print(f"Connected to OpenAI API ({MODEL_NAME}). Ready to chat!\n")
+        print(f"Connected to OpenAI API ({MODEL_NAME}, reasoning={REASONING_CONFIG['effort']}). Ready to chat!\n")
     
     # Main conversation loop
     while True:

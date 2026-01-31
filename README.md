@@ -1,6 +1,6 @@
 # AI Humanizer Chatbot
 
-A CLI chatbot that uses OpenAI API with specialized system prompts and inference parameters to generate humanized text that bypasses AI detection.
+A CLI chatbot that uses OpenAI GPT-5.2 API with low reasoning effort and specialized system prompts to generate humanized text that bypasses AI detection.
 
 ## How It Works
 
@@ -72,9 +72,10 @@ The system prompt enforces:
 
 | Parameter | Value | Purpose |
 |-----------|-------|---------|
+| model | gpt-5.2 | OpenAI's flagship model with reasoning control |
+| reasoning.effort | low | Minimal thinking for faster, more human-like output |
 | temperature | 0.95 | High randomness for unpredictable word choices |
 | top_p | 0.92 | Allows creative outliers while maintaining coherence |
-| top_k | 50 | Broad vocabulary sampling |
 | presence_penalty | 0.4 | Discourages repeating concepts |
 | frequency_penalty | 0.3 | Reduces word repetition |
 

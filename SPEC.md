@@ -1,7 +1,7 @@
 # SPEC.md - AI Humanizer Chatbot
 
 ## Project Overview
-A CLI chatbot that uses OpenAI API with a specialized system prompt and inference parameters to generate guaranteed humanized text that bypasses AI detection by manipulating perplexity and burstiness.
+A CLI chatbot that uses OpenAI GPT-5.2 API with low reasoning effort and a specialized system prompt to generate guaranteed humanized text that bypasses AI detection by manipulating perplexity and burstiness.
 
 ## Core Concepts (Research Summary)
 
@@ -83,6 +83,8 @@ OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightl
 
 ```json
 {
+  "model": "gpt-5.2",
+  "reasoning": { "effort": "low" },
   "temperature": 0.95,
   "topP": 0.92,
   "presencePenalty": 0.4,
@@ -96,6 +98,7 @@ OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightl
 | Parameter | Value | Purpose |
 |-----------|-------|---------|
 | temperature | 0.95 | High randomness for unpredictable word choices |
+| reasoning.effort | low | Low thinking budget for faster, more natural responses |
 | topP | 0.92 | Nucleus sampling - allows creative outliers while maintaining coherence |
 | presencePenalty | 0.4 | Discourages repeating concepts - forces lexical diversity |
 | frequencyPenalty | 0.3 | Reduces repetition of specific words |
