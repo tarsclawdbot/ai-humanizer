@@ -1,6 +1,6 @@
 # AI Humanizer Chatbot
 
-A CLI chatbot that uses Gemini API with specialized system prompts and generation parameters to generate humanized text that bypasses AI detection.
+A CLI chatbot that uses **OpenAI GPT-5.2** with low reasoning effort to generate humanized text that bypasses AI detection.
 
 ## How It Works
 
@@ -12,14 +12,15 @@ This chatbot manipulates two key metrics that AI detectors use:
 ## Installation
 
 ```bash
-# Clone or download the project
+# Clone the repo
+git clone https://github.com/tarsclawdbot/ai-humanizer.git
 cd ai-humanizer
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Set your Gemini API key
-export GEMINI_API_KEY="your-api-key-here"
+# Set your OpenAI API key
+export OPENAI_API_KEY="your-api-key-here"
 
 # Or create a .env file
 cp .env.example .env
@@ -37,10 +38,7 @@ python humanizer.py
 ```
 🎭 AI Humanizer Chatbot
 
-This chatbot uses advanced techniques to generate human-like text:
-• High perplexity (surprising word choices)
-• High burstiness (varied sentence structures)
-...
+Uses OpenAI GPT-5.2 with low reasoning effort to generate human-like text...
 
 You: Write about artificial intelligence
 
@@ -68,21 +66,22 @@ The system prompt enforces:
 - **Structural chaos** - Random paragraph lengths, sentence starters
 - **Voice injection** - Opinions, rhetorical questions, self-corrections
 
-### Inference Parameters
+### Model & Parameters
 
 | Parameter | Value | Purpose |
 |-----------|-------|---------|
-| model | gemini-2.5-pro | Google's flagship model |
+| model | gpt-5.2 | OpenAI's flagship model with reasoning control |
+| reasoning.effort | low | Minimal thinking for faster, more natural output |
 | temperature | 0.95 | High randomness for unpredictable word choices |
 | top_p | 0.92 | Allows creative outliers while maintaining coherence |
 | presence_penalty | 0.4 | Discourages repeating concepts |
 | frequency_penalty | 0.3 | Reduces word repetition |
 
-## Getting a Gemini API Key
+## Getting an OpenAI API Key
 
-1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
 2. Create an API key
-3. Set it as `GEMINI_API_KEY` environment variable or in `.env` file
+3. Set it as `OPENAI_API_KEY` environment variable or in `.env` file
 
 ## Testing Against AI Detectors
 
@@ -93,7 +92,6 @@ To verify the humanization is working:
 3. Test with detectors like:
    - [GPTZero](https://gptzero.me)
    - [Originality.ai](https://originality.ai)
-   - [Writer.com AI Detector](https://writer.com/ai-content-detector/)
 
 Well-humanized text should score <10% AI probability.
 
@@ -102,33 +100,11 @@ Well-humanized text should score <10% AI probability.
 ```
 humanizer.py
 ├── HUMANIZATION_SYSTEM_PROMPT  # Verbatim humanization directives
-├── GENERATION_CONFIG           # Tuned inference parameters
-├── get_api_key()              # API key management
-├── create_client()            # Gemini client setup
-└── main()                     # Chat loop
+├── create_client()             # OpenAI client setup
+├── generate_response()         # API call with reasoning control
+└── main()                      # Chat loop
 ```
-
-## Customization
-
-Edit `HUMANIZATION_SYSTEM_PROMPT` in `humanizer.py` to adjust:
-- Tone (more casual, more professional, etc.)
-- Specific phrases to ban/encourage
-- Structural preferences
-
-Edit `GENERATION_CONFIG` to adjust randomness and creativity levels.
 
 ## License
 
 MIT License - Use responsibly and ethically.
-
-## Disclaimer
-
-This tool is designed for:
-- Protecting legitimate work from false AI detection positives
-- Learning about AI detection mechanisms
-- Improving AI text quality
-
-Not for:
-- Academic dishonesty
-- Deceiving readers about AI authorship where prohibited
-- Bypassing legitimate content policies
