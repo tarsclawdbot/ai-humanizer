@@ -107,7 +107,7 @@ OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightl
 
 ## Implementation Requirements
 
-1. **CLI Interface**: Simple command-line chatbot using OpenAI API
+1. **CLI Interface**: Simple command-line chatbot using OpenAI Responses API (supports reasoning parameter)
 2. **System Prompt**: Must use the VERBATIM prompt above, unmodified
 3. **Parameters**: Must use the EXACT parameter values specified
 4. **Conversation Memory**: Maintain context across turns

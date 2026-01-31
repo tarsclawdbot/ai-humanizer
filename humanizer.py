@@ -118,21 +118,37 @@ def create_client(api_key: str):
 
 
 def generate_response(client, user_input: str, history: list) -> str:
-    messages = [{"role": "system", "content": HUMANIZATION_SYSTEM_PROMPT}]
-    messages.extend(history)
-    messages.append({"role": "user", "content": user_input})
+    # Build input with system prompt and history
+    input_messages = []
     
-    response = client.chat.completions.create(
+    # Add system instruction
+    input_messages.append({
+        "role": "system",
+        "content": HUMANIZATION_SYSTEM_PROMPT
+    })
+    
+    # Add conversation history
+    for msg in history:
+        input_messages.append({
+            "role": "user" if msg["role"] == "user" else "assistant",
+            "content": msg["content"]
+        })
+    
+    # Add current user input
+    input_messages.append({
+        "role": "user",
+        "content": user_input
+    })
+    
+    # Use Responses API for reasoning effort support
+    response = client.responses.create(
         model=MODEL_NAME,
-        messages=messages,
-        temperature=GENERATION_CONFIG["temperature"],
-        top_p=GENERATION_CONFIG["top_p"],
-        presence_penalty=GENERATION_CONFIG["presence_penalty"],
-        frequency_penalty=GENERATION_CONFIG["frequency_penalty"],
-        max_tokens=GENERATION_CONFIG["max_tokens"],
+        input=input_messages,
         reasoning={"effort": REASONING_EFFORT},
+        text={"verbosity": "medium"},
     )
-    return response.choices[0].message.content
+    
+    return response.output_text
 
 
 def main():

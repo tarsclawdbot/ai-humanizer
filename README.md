@@ -101,9 +101,11 @@ Well-humanized text should score <10% AI probability.
 humanizer.py
 ├── HUMANIZATION_SYSTEM_PROMPT  # Verbatim humanization directives
 ├── create_client()             # OpenAI client setup
-├── generate_response()         # API call with reasoning control
+├── generate_response()         # Responses API call with reasoning control
 └── main()                      # Chat loop
 ```
+
+**Note:** Uses OpenAI's Responses API (`client.responses.create`) which supports the `reasoning` parameter for GPT-5.2, not the legacy Chat Completions API.
 
 ## License
 
