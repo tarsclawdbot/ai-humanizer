@@ -1,7 +1,7 @@
 # SPEC.md - AI Humanizer Chatbot
 
 ## Project Overview
-A CLI chatbot that uses OpenAI GPT-5.2 API with low reasoning effort and a specialized system prompt to generate guaranteed humanized text that bypasses AI detection by manipulating perplexity and burstiness.
+A CLI chatbot that uses Gemini API with a specialized system prompt and generation parameters to generate guaranteed humanized text that bypasses AI detection by manipulating perplexity and burstiness.
 
 ## Core Concepts (Research Summary)
 
@@ -83,12 +83,10 @@ OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightl
 
 ```json
 {
-  "model": "gpt-5.2",
-  "reasoning": { "effort": "low" },
+  "model": "gemini-2.5-pro-preview-06-05",
   "temperature": 0.95,
   "topP": 0.92,
-  "presencePenalty": 0.4,
-  "frequencyPenalty": 0.3,
+  "topK": 50,
   "maxOutputTokens": 2048
 }
 ```
@@ -98,15 +96,13 @@ OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightl
 | Parameter | Value | Purpose |
 |-----------|-------|---------|
 | temperature | 0.95 | High randomness for unpredictable word choices |
-| reasoning.effort | low | Low thinking budget for faster, more natural responses |
 | topP | 0.92 | Nucleus sampling - allows creative outliers while maintaining coherence |
-| presencePenalty | 0.4 | Discourages repeating concepts - forces lexical diversity |
-| frequencyPenalty | 0.3 | Reduces repetition of specific words |
+| topK | 50 | Broad vocabulary sampling |
 | maxOutputTokens | 2048 | Standard conversational length |
 
 ## Implementation Requirements
 
-1. **CLI Interface**: Simple command-line chatbot using OpenAI API
+1. **CLI Interface**: Simple command-line chatbot using Gemini API
 2. **System Prompt**: Must use the VERBATIM prompt above, unmodified
 3. **Parameters**: Must use the EXACT parameter values specified
 4. **Conversation Memory**: Maintain context across turns
@@ -116,20 +112,20 @@ OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightl
 ```
 ai-humanizer/
 ├── humanizer.py          # Main chatbot implementation
-├── .env                  # API key (OPENAI_API_KEY)
+├── .env                  # API key (GEMINI_API_KEY)
 ├── requirements.txt      # Dependencies
 └── README.md            # Usage instructions
 ```
 
 ## Dependencies
-- `openai` - Official OpenAI Python SDK
+- `google-genai` - Official Gemini Python SDK
 - `python-dotenv` - Environment variable management
 - `rich` - Beautiful terminal formatting (optional but recommended)
 
 ## Usage
 ```bash
 # Setup
-export OPENAI_API_KEY="your-api-key"
+export GEMINI_API_KEY="your-api-key"
 pip install -r requirements.txt
 
 # Run

@@ -11,13 +11,11 @@ HUMANIZATION_SYSTEM_PROMPT = "..."
 GENERATION_CONFIG = {
     "temperature": 0.95,
     "top_p": 0.92,
-    "presence_penalty": 0.4,
-    "frequency_penalty": 0.3,
+    "top_k": 50,
 }
 
 MODEL_CONFIG = {
-    "model": "gpt-5.2",
-    "reasoning_effort": "low"
+    "model": "gemini-2.5-pro",
 }
 
 DEMO_PROMPT = "Explain what photosynthesis is"
@@ -109,12 +107,10 @@ print(f"""
 The humanization is achieved through a specialized system prompt and tuned parameters:
 
 PARAMETERS:
-• model: {MODEL_CONFIG['model']} (OpenAI flagship with reasoning control)
-• reasoning_effort: {MODEL_CONFIG['reasoning_effort']} (low thinking budget)
+• model: {MODEL_CONFIG['model']} (Google Gemini flagship)
 • temperature: {GENERATION_CONFIG['temperature']} (high randomness)
 • top_p: {GENERATION_CONFIG['top_p']} (creative outliers allowed)
-• presence_penalty: {GENERATION_CONFIG['presence_penalty']} (discourage repetition)
-• frequency_penalty: {GENERATION_CONFIG['frequency_penalty']} (lexical diversity)
+• top_k: {GENERATION_CONFIG['top_k']} (broad vocabulary)
 
 SYSTEM PROMPT INCLUDES:
 • Perplexity manipulation directives
