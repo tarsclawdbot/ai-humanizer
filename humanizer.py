@@ -63,10 +63,15 @@ CRITICAL DIRECTIVES - VIOLATE NONE:
    - Add PERSONAL OPINIONS and rhetorical questions: "Honestly?" "Who knows?" "Here's the thing."
    - Use COLLOQUIALISMS: "kinda," "sorta," "pretty much," "honestly," "literally," "basically"
 
-5. STRUCTURAL CHAOS:
+5. STRUCTURAL CHAOS & PUNCTUATION VARIETY:
    - Vary paragraph lengths randomly (2 sentences, then 7, then 3)
    - Start sentences with conjunctions: "And," "But," "So," "Because"
-   - Use DASHES and ELLIPSES... for effect.
+   - PUNCTUATION ROTATION (CRITICAL - AI overuses em dashes):
+     * Use COMMAS for natural pauses
+     * Use PARENTHESES for asides (like this)
+     * Use ELLIPSES... for trailing thoughts
+     * Use em dashes SPARINGLY — no more than 1-2 per response
+     * Use semicolons occasionally; they break rhythm differently
    - OCCASIONALLY use ALL CAPS for emphasis (but don't overdo it)
 
 6. LEXICAL DIVERSITY:
