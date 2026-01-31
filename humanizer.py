@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 AI Humanizer Chatbot
-Uses Gemini API with specialized system prompt and parameters to generate
+Uses OpenAI API with specialized system prompt and parameters to generate
 humanized text that bypasses AI detection by manipulating perplexity and burstiness.
 """
 
@@ -16,9 +16,9 @@ except ImportError:
     pass
 
 try:
-    import google.generativeai as genai
+    from openai import OpenAI
 except ImportError:
-    print("Error: google-generativeai not installed. Run: pip install google-generativeai")
+    print("Error: openai not installed. Run: pip install openai")
     sys.exit(1)
 
 # Try to import rich for beautiful output, fallback to plain print
@@ -88,16 +88,17 @@ CRITICAL DIRECTIVES - VIOLATE NONE:
 OUTPUT REQUIREMENT: Every response must feel like a real person typing - slightly messy, occasionally surprising, authentically human. If it sounds too polished, it's wrong."""
 
 # =============================================================================
-# INFERENCE PARAMETERS FOR HUMAN-LIKE GENERATION
-# These parameters are tuned to increase randomness and reduce AI predictability
+# MODEL & PARAMETER CONFIGURATION
+# Using OpenAI GPT-4o with high randomness settings for humanization
 # =============================================================================
+MODEL_NAME = "gpt-4o"  # Latest OpenAI model (gpt-5.2 not yet available)
+
 GENERATION_CONFIG = {
     "temperature": 0.95,        # High randomness for unpredictable word choices
     "top_p": 0.92,              # Nucleus sampling - allows creative outliers
-    "top_k": 50,                # Broad vocabulary sampling
     "presence_penalty": 0.4,    # Discourages repeating concepts
     "frequency_penalty": 0.3,   # Reduces repetition of specific words
-    "max_output_tokens": 2048,  # Standard conversational length
+    "max_tokens": 2048,         # Standard conversational length
 }
 
 EXIT_COMMANDS = {"exit", "quit", "bye", "goodbye", "q"}
@@ -105,7 +106,7 @@ EXIT_COMMANDS = {"exit", "quit", "bye", "goodbye", "q"}
 
 def print_welcome():
     """Display welcome message and instructions."""
-    welcome_text = """
+    welcome_text = f"""
 🎭 AI Humanizer Chatbot
 
 This chatbot uses advanced techniques to generate human-like text:
@@ -114,8 +115,9 @@ This chatbot uses advanced techniques to generate human-like text:
 • AI pattern eradication (bans robotic phrases)
 • Human voice injection (opinions, fragments, colloquialisms)
 
-Parameters: temperature=0.95, top_p=0.92, top_k=50
-            presence_penalty=0.4, frequency_penalty=0.3
+Model: {MODEL_NAME}
+Parameters: temperature={GENERATION_CONFIG['temperature']}, top_p={GENERATION_CONFIG['top_p']}
+            presence_penalty={GENERATION_CONFIG['presence_penalty']}, frequency_penalty={GENERATION_CONFIG['frequency_penalty']}
 
 Type 'exit' or 'quit' to end the conversation.
 """
@@ -144,15 +146,15 @@ def get_input(prompt_text: str = "You") -> str:
 
 def get_api_key() -> str:
     """Retrieve API key from environment or prompt user."""
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("OPENAI_API_KEY")
     
     if not api_key:
         if RICH_AVAILABLE:
-            console.print("[yellow]⚠️  GEMINI_API_KEY not found in environment[/yellow]")
+            console.print("[yellow]⚠️  OPENAI_API_KEY not found in environment[/yellow]")
         else:
-            print("⚠️  GEMINI_API_KEY not found in environment")
+            print("⚠️  OPENAI_API_KEY not found in environment")
         
-        api_key = get_input("Enter your Gemini API key" if not RICH_AVAILABLE else "Enter your Gemini API key")
+        api_key = get_input("Enter your OpenAI API key" if not RICH_AVAILABLE else "Enter your OpenAI API key")
         
         if not api_key:
             print("Error: API key is required")
@@ -161,40 +163,47 @@ def get_api_key() -> str:
     return api_key
 
 
-def initialize_model(api_key: str):
-    """Initialize the Gemini model with humanization settings."""
-    genai.configure(api_key=api_key)
-    
-    # Configure the model with system instruction
-    model = genai.GenerativeModel(
-        model_name="gemini-2.0-flash-exp",
-        system_instruction=HUMANIZATION_SYSTEM_PROMPT,
-        generation_config=GENERATION_CONFIG
+def initialize_client(api_key: str):
+    """Initialize the OpenAI client."""
+    return OpenAI(api_key=api_key)
+
+
+def generate_response(client: OpenAI, messages: list) -> str:
+    """Generate a humanized response using OpenAI API."""
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=messages,
+        temperature=GENERATION_CONFIG["temperature"],
+        top_p=GENERATION_CONFIG["top_p"],
+        presence_penalty=GENERATION_CONFIG["presence_penalty"],
+        frequency_penalty=GENERATION_CONFIG["frequency_penalty"],
+        max_tokens=GENERATION_CONFIG["max_tokens"],
     )
-    
-    return model
+    return response.choices[0].message.content
 
 
 def main():
     """Main chatbot loop."""
     print_welcome()
     
-    # Get API key and initialize model
+    # Get API key and initialize client
     api_key = get_api_key()
     
     try:
-        model = initialize_model(api_key)
+        client = initialize_client(api_key)
     except Exception as e:
-        print(f"Error initializing model: {e}")
+        print(f"Error initializing OpenAI client: {e}")
         sys.exit(1)
     
-    # Start chat session with history
-    chat = model.start_chat(history=[])
+    # Initialize conversation history with system prompt
+    messages = [
+        {"role": "system", "content": HUMANIZATION_SYSTEM_PROMPT}
+    ]
     
     if RICH_AVAILABLE:
-        console.print("[dim]Connected to Gemini API. Ready to chat![/dim]\n")
+        console.print(f"[dim]Connected to OpenAI API ({MODEL_NAME}). Ready to chat![/dim]\n")
     else:
-        print("Connected to Gemini API. Ready to chat!\n")
+        print(f"Connected to OpenAI API ({MODEL_NAME}). Ready to chat!\n")
     
     # Main conversation loop
     while True:
@@ -212,17 +221,23 @@ def main():
             if not user_input:
                 continue
             
+            # Add user message to history
+            messages.append({"role": "user", "content": user_input})
+            
             # Generate response
             if RICH_AVAILABLE:
                 with console.status("[bold yellow]Humanizing...[/bold yellow]", spinner="dots"):
-                    response = chat.send_message(user_input)
+                    response_text = generate_response(client, messages)
             else:
                 print("Humanizing...", end=" ", flush=True)
-                response = chat.send_message(user_input)
+                response_text = generate_response(client, messages)
                 print("✓")
             
+            # Add assistant response to history
+            messages.append({"role": "assistant", "content": response_text})
+            
             # Display response
-            print_response(response.text)
+            print_response(response_text)
             
         except KeyboardInterrupt:
             print("\n\nInterrupted by user. Goodbye!")

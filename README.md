@@ -1,6 +1,6 @@
 # AI Humanizer Chatbot
 
-A CLI chatbot that uses Gemini API with specialized system prompts and inference parameters to generate humanized text that bypasses AI detection.
+A CLI chatbot that uses OpenAI API with specialized system prompts and inference parameters to generate humanized text that bypasses AI detection.
 
 ## How It Works
 
@@ -18,8 +18,8 @@ cd ai-humanizer
 # Install dependencies
 pip install -r requirements.txt
 
-# Set your Gemini API key
-export GEMINI_API_KEY="your-api-key-here"
+# Set your OpenAI API key
+export OPENAI_API_KEY="your-api-key-here"
 
 # Or create a .env file
 cp .env.example .env
@@ -78,11 +78,11 @@ The system prompt enforces:
 | presence_penalty | 0.4 | Discourages repeating concepts |
 | frequency_penalty | 0.3 | Reduces word repetition |
 
-## Getting a Gemini API Key
+## Getting an OpenAI API Key
 
-1. Visit [Google AI Studio](https://aistudio.google.com/)
+1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
 2. Create an API key
-3. Set it as `GEMINI_API_KEY` environment variable or in `.env` file
+3. Set it as `OPENAI_API_KEY` environment variable or in `.env` file
 
 ## Testing Against AI Detectors
 
@@ -104,7 +104,7 @@ humanizer.py
 ├── HUMANIZATION_SYSTEM_PROMPT  # Verbatim humanization directives
 ├── GENERATION_CONFIG           # Tuned inference parameters
 ├── get_api_key()              # API key management
-├── initialize_model()         # Gemini model setup
+├── initialize_client()        # OpenAI client setup
 └── main()                     # Chat loop
 ```
 
